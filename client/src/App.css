@@ -2,6 +2,9 @@
 a{
   color:black !important;
 }
+.home-card h5{
+  text-decoration: underline;
+}
 .back-color{
   background-color: #bad3df !important;
 }

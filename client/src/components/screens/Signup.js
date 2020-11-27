@@ -32,7 +32,7 @@ const Signup = () => {
     return (
         <div>
             <div className="card auth-card">
-                <h2 className="brand-logo">Instagram</h2>
+                <h2 className="brand-logo">Picstagram</h2>
                 <input type="text" placeholder="name" value={name} onChange={(e) => setName(e.target.value)} />
                 <input type="text" placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                 <input type="password" placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)} />

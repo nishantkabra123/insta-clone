@@ -9,12 +9,8 @@ const requireLogin=require('../middleware/requireLogin')
 
 // let userExists=false
 
-router.get('/',(req,res)=>{
-res.send("hello")
-})
-
-// router.get('/protected',requireLogin,(req,res)=>{
-//     res.send("hello user")  
+// router.get('/',(req,res)=>{
+// res.send("hello")
 // })
 
 router.post('/signup',(req,res)=>{    
