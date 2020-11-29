@@ -2,7 +2,7 @@
 a{
   color:black !important;
 }
-.home-card h5{
+.home-card h5,.comments-user{
   text-decoration: underline;
 }
 .back-color{

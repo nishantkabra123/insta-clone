@@ -2,6 +2,8 @@ import React,{useState,useContext} from 'react'
 import {Link,useHistory} from 'react-router-dom'
 import M from 'materialize-css'
 import {UserContext} from '../../App'
+import { GoogleLogin } from 'react-google-login';
+import axios from 'axios';
 
 const SignIn = () => {
     const {state,dispatch} = useContext(UserContext)
@@ -17,7 +19,7 @@ const SignIn = () => {
             return
         }
         fetch("/signin", {
-            method: "post",
+            method: "post", 
             headers: {
                 "Content-Type": "application/json"
             },
@@ -38,6 +40,30 @@ const SignIn = () => {
             }
         }).catch(err=>{console.log(err)})
     }
+
+    const responseSuccessGoogle = (response)=>{
+        console.log(response)
+        axios({
+            method:"POST",
+            url:"/googlelogin",
+            data:{tokenId:response.tokenId}
+        })/* .then(res => res.json()) */.then(response=>{
+            console.log("google login response ",response)
+            if (response.data.error) {
+                M.toast({ html: response.data.error,classes:"#ef5350 red lighten-1"})
+            }else{
+                localStorage.setItem("jwt",response.data.token)
+                localStorage.setItem("user",JSON.stringify(response.data.user))
+                dispatch({type:"USER",payload:response.data.user})
+                M.toast({html:"signedin success",classes:"#9fa8da indigo lighten-3"})
+                history.push('/')
+            }
+        })
+    }
+
+    const responseErrorGoogle=(response)=>{
+        console.log(response)
+    }
     
     return (
         <div>
@@ -48,6 +74,14 @@ const SignIn = () => {
                 <button onClick={()=>PostData()} className="btn waves-effect waves-light" type="submit" name="action">Sign In
                 </button>
                 <h6><Link to="/signup">Dont have an account ? Click here</Link></h6>
+                
+                <GoogleLogin
+                    clientId="502222932529-3i1mpsjeruqeeeeum9i9tsgp4fjconhk.apps.googleusercontent.com"
+                    buttonText="Login with Google"
+                    onSuccess={responseSuccessGoogle}
+                    onFailure={responseErrorGoogle}
+                    cookiePolicy={'single_host_origin'}
+                />
 
 
             </div>

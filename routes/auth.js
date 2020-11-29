@@ -6,12 +6,50 @@ const bcrypt=require('bcryptjs')
 const jwt=require('jsonwebtoken')
 const {JWT_SECRET}=require('../config/keys')
 const requireLogin=require('../middleware/requireLogin')
+const {OAuth2Client}=require('google-auth-library')
 
 // let userExists=false
 
 // router.get('/',(req,res)=>{
 // res.send("hello")
 // })
+
+const client=new OAuth2Client("502222932529-3i1mpsjeruqeeeeum9i9tsgp4fjconhk.apps.googleusercontent.com")
+
+router.post('/googlelogin',(req,res)=>{
+    const {tokenId} =req.body
+    client.verifyIdToken({idToken:tokenId,audience:"502222932529-3i1mpsjeruqeeeeum9i9tsgp4fjconhk.apps.googleusercontent.com"})
+    .then(response=>{
+        const {email_verified,name,email}=response.payload
+        console.log(response.payload)
+        if(email_verified){
+            User.findOne({email}).exec((err,user)=>{
+                if(err){
+                    return res.status(422).json({error:err})
+                }else{
+                    if(user){
+                        const token=jwt.sign({_id:user._id},JWT_SECRET)  //payload,secret
+                        const {_id,name,email}=user
+                        res.json({token,user:{_id,name,email}})   //{token:token} 
+                    }else{
+                        let password=email
+                        let newUser= new User({name,email,password})
+                        newUser.save((err,data)=>{
+                            if(err){
+                                return res.status(422).json({error:"User creation failed"})
+                            }
+                            const token=jwt.sign({_id:data._id},JWT_SECRET)  //payload,secret
+                            const {_id,name,email}=newUser
+                            res.json({token,user:{_id,name,email}})   //{token:token} 
+                        })
+
+                    }
+                }
+            })
+        }
+    })
+
+})
 
 router.post('/signup',(req,res)=>{    
     const {name,email,password}=req.body 

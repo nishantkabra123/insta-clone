@@ -155,9 +155,8 @@ const Home =()=>{
                                 {   
                                 
                                     item.comments.map(record=>{
-                                        // console.log("comment is",record)
                                         return (                                            
-                                        <h6 key={record._id}><span style={{fontWeight:"500"}}>{record.postedBy.name}</span> {record.text}
+                                        <h6 key={record._id}><span style={{fontWeight:"500"}}><Link className="comments-user" to={record.postedBy._id!==state._id?"/profile/"+record.postedBy._id:"/profile"}>{record.postedBy.name}</Link></span> {record.text}
                                         {
                                         record.postedBy._id==state._id && 
                                          <i className="material-icons" onClick={()=>{deleteComment(item._id,record._id)}} style={{float:"right"}}>delete</i>

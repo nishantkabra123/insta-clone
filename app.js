@@ -7,6 +7,7 @@ const port= process.env.PORT || 5000
 
 const{MONGOURI}=require('./config/keys')
 
+require("dotenv").config();
 require('./models/user')
 require('./models/post')
 
